@@ -6,12 +6,16 @@
 */
 {
   "files": [],
-  "references": [
-    {
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "allowJs": true
+  },
+  "references": [{
       "path": "./tsconfig.app.json"
     },
     {
       "path": "./tsconfig.spec.json"
-    }
-]
+    },
+
+  ]
 }

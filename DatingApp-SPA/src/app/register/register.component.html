@@ -3,16 +3,38 @@
   <hr>
 
   <div class="form-group">
-    <input type="text" formControlName="username" class="form-control" placeholder="Username">
+    <input type="text" (keyup)="clicked()" formControlName="username" class="form-control" placeholder="Username">
+  </div>
+
+  <div *ngIf="registerForm.controls.username.touched && registerForm.controls.username.status === 'INVALID'">
+    <div *ngIf="registerForm.controls.username.errors?.required" class="alert alert-danger" role="alert">
+      Username is required
+    </div>
+    <div *ngIf="registerForm.controls.username.errors?.minlength?.actualLength < 4
+      || registerForm.controls.username.errors?.maxlength?.actualLength < 8
+    " class="alert alert-danger" role="alert">
+      Username shold be between 4 to 8 Characters
+    </div>
   </div>
 
   <div class="form-group">
     <input type="password" formControlName="password" class="form-control" placeholder="Password">
   </div>
 
+  <div *ngIf="registerForm.controls.password.touched && registerForm.controls.password.status === 'INVALID'">
+    <div *ngIf="registerForm.controls.password.errors?.required" class="alert alert-danger" role="alert">
+      Password is required
+    </div>
+    <div *ngIf="registerForm.controls.password.errors?.minlength?.actualLength < 4
+      || registerForm.controls.password.errors?.maxlength?.actualLength < 8
+    " class="alert alert-danger" role="alert">
+      Password shold be between 4 to 8 Characters
+    </div>
+  </div>
+
   <div class="form-group text-center">
-    <button class="btn btn-success" type="submit">Register</button>
-    <button class="btn btn-default" (click)="cancel()" [disabled]="!registerForm.valid" type="button">Cancel</button>
+    <button class="btn btn-success" type="submit" [disabled]="!registerForm.valid" >Register</button>
+    <button class="btn btn-default" (click)="cancel()" type="button">Cancel</button>
   </div>
 
 </form>

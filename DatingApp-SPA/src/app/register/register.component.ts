@@ -32,6 +32,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
     ]),
   });
 
+  clicked() {
+    console.log(this.registerForm);
+  }
+
   constructor(private service: AuthService) {}
 
   ngOnDestroy(): void {
