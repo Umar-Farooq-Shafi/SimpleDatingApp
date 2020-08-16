@@ -16,6 +16,7 @@ namespace DatingApp.API
             CreateHostBuilder(args).Build().Run();
         }
 
+        // Starter of the program
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
