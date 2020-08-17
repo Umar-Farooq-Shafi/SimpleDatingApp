@@ -1,3 +1,4 @@
+import { AlertifyService } from './../_service/alertify.service';
 import { AuthService } from './../_service/auth.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {
@@ -36,7 +37,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
     console.log(this.registerForm);
   }
 
-  constructor(private service: AuthService) {}
+  constructor(
+    private service: AuthService,
+    private alertify: AlertifyService
+  ) {}
 
   ngOnDestroy(): void {
     if (this.isSub) {
@@ -49,7 +53,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   register(): void {
     this.subs$ = this.service.register(this.registerForm.value).subscribe(
       () => {
-        console.log('Register successful...');
+        this.alertify.success('Register successful...');
         this.isSub = true;
         this.registerForm.reset();
       },

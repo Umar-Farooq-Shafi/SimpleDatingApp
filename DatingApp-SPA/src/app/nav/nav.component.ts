@@ -1,3 +1,4 @@
+import { AlertifyService } from './../_service/alertify.service';
 import { AuthService } from '../_service/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -13,25 +14,28 @@ export class NavComponent implements OnInit {
     password: new FormControl('', [Validators.required]),
   });
 
-  constructor(private authService: AuthService) {}
+  constructor(
+    public authService: AuthService,
+    private alertify: AlertifyService
+  ) {}
 
   ngOnInit(): void {}
 
   onSubmit(): void {
     this.authService.login(this.loginForm.value).subscribe(
       (next) => {
-        console.log('Login successfully');
+        this.alertify.success('Login successfully');
       },
-      (err) => console.log(err)
+      (err) => this.alertify.error(err)
     );
   }
 
   loggedIn(): boolean {
-    return !!localStorage.getItem('token');
+    return this.authService.loggedIn();
   }
 
   logout(): void {
     localStorage.removeItem('token');
-    console.log('Logged out...');
+    this.alertify.message('Logged out...');
   }
 }

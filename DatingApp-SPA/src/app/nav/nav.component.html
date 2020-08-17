@@ -1,15 +1,16 @@
 <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
       <h5 class="my-0 mr-md-auto font-weight-normal">Dating App</h5>
-      <nav class="my-2 my-md-0 mr-md-3">
+      <nav *ngIf="loggedIn()" class="my-2 my-md-0 mr-md-3">
         <a class="p-2 text-dark" href="#">Matches</a>
         <a class="p-2 text-dark" href="#">Lists</a>
         <a class="p-2 text-dark" href="#">Messages</a>
         <a class="p-2 text-dark" href="#">Pricing</a>
       </nav>
 
-      <div *ngIf="loggedIn()" class="dropdown">
-        <span class="dropdown-item-text mx-2 dropdown-toggle">Welcome</span>
-        <div class="dropdown-menu">
+      <div *ngIf="loggedIn()" class="dropdown" dropdown>
+        <span class="dropdown-item-text mx-2 dropdown-toggle" dropdownToggle>
+          Welcome {{ authService.decodedToken?.unique_name | titlecase}}</span>
+        <div class="dropdown-menu mt-3" *dropdownMenu>
           <a class="dropdown-item" href="#">
             <i class="fa fa-user"></i>
             Edit Profile
