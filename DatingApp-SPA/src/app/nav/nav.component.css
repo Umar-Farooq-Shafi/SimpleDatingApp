@@ -1,4 +1,5 @@
 .dropdown-item-text:hover,
-.dropdown-item:hover {
+.dropdown-item:hover,
+h5:hover {
     cursor: pointer;
 }

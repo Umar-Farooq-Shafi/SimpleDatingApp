@@ -1,10 +1,9 @@
 <div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-      <h5 class="my-0 mr-md-auto font-weight-normal">Dating App</h5>
+      <h5 class="my-0 mr-md-auto font-weight-normal" [routerLink]="['']">Dating App</h5>
       <nav *ngIf="loggedIn()" class="my-2 my-md-0 mr-md-3">
-        <a class="p-2 text-dark" href="#">Matches</a>
-        <a class="p-2 text-dark" href="#">Lists</a>
-        <a class="p-2 text-dark" href="#">Messages</a>
-        <a class="p-2 text-dark" href="#">Pricing</a>
+        <a class="p-2 text-dark" [routerLink]="['/user/members']" routerLinkActive="active">Matches</a>
+        <a class="p-2 text-dark" [routerLink]="['/user/lists']" routerLinkActive="active">Lists</a>
+        <a class="p-2 text-dark" [routerLink]="['/user/messages']" routerLinkActive="active">Messages</a>
       </nav>
 
       <div *ngIf="loggedIn()" class="dropdown" dropdown>
