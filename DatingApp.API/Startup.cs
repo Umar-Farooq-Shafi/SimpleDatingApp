@@ -1,7 +1,8 @@
 using System.Net;
 using System.Text;
+using AutoMapper;
 using DatingApp.API.Data;
-using DattingApp.API.Helpers;
+using DatingApp.API.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -20,7 +21,7 @@ namespace DatingApp.API {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices (IServiceCollection services) {
@@ -29,16 +30,27 @@ namespace DatingApp.API {
                 x.UseSqlite (Configuration.GetConnectionString ("DefaultConnection")));
 
             // CONFIG: Controllers
-            services.AddControllers ();
-
+            services.AddControllers().SetCompatibilityVersion(CompatibilityVersion.Latest);
+            
             // CONFIG: MVC pattern
-            // services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Latest)
+                .AddNewtonsoftJson(opt =>
+                {
+                    opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
 
             // CONFIG: for cors platform access
             services.AddCors ();
 
+            // CONFIG: for AUTO-Mapper dep injections platform access
+            services.AddAutoMapper();
+
+            // CONFIG: Seeding the user data into DB
+            services.AddTransient<Seed>();
+
             // CONFIG: Register the Repo into APP
             services.AddScoped<IAuthRepo, AuthRepo> ();
+            services.AddScoped<IDatingRepo, DatingRepo>();
 
             // CONFIG: Guard for Authenticated user
             services.AddAuthentication (JwtBearerDefaults.AuthenticationScheme)
@@ -54,7 +66,7 @@ namespace DatingApp.API {
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure (IApplicationBuilder app, IWebHostEnvironment env) {
+        public void Configure (IApplicationBuilder app, IWebHostEnvironment env, Seed seed) {
             if (env.IsDevelopment ()) {
                 app.UseDeveloperExceptionPage ();
             } else app.UseExceptionHandler (builder => { // Handling exception errors
@@ -70,6 +82,8 @@ namespace DatingApp.API {
             });
 
             app.UseHttpsRedirection ();
+
+            // seed.SeedUser(); // TODO: Uncomment if you want to seed user data into DB
 
             app.UseCors (x => x.AllowAnyOrigin ().AllowAnyMethod ().AllowAnyHeader ());
 
