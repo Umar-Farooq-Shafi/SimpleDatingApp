@@ -1,8 +1,9 @@
-import { AlertifyService } from './../_service/alertify.service';
-import { AuthService } from '../_service/auth.service';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+
+import { AlertifyService } from './../_service/alertify.service';
+import { AuthService } from '../_service/auth.service';
 
 @Component({
   selector: 'app-nav',
@@ -14,6 +15,7 @@ export class NavComponent implements OnInit {
     username: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
   });
+  photoUrl: string;
 
   constructor(
     public authService: AuthService,
@@ -21,7 +23,9 @@ export class NavComponent implements OnInit {
     private router: Router
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.authService.currentPhotoUrl.subscribe((url) => (this.photoUrl = url));
+  }
 
   onSubmit(): void {
     this.authService.login(this.loginForm.value).subscribe(
@@ -42,6 +46,9 @@ export class NavComponent implements OnInit {
 
   logout(): void {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    this.authService.currentUser = null;
+    this.authService.decodedToken = null;
     this.alertify.message('Logged out...');
     this.router.navigateByUrl('/');
   }

@@ -14,7 +14,7 @@
   <div class="row">
     <div class="col-sm-4">
       <div class="card">
-        <img class="card-img-top img-thumbnail" [src]="user.photoUrl" alt />
+        <img class="card-img-top img-thumbnail" [src]="photoUrl" alt />
 
         <div class="card-body">
           <div>
@@ -68,7 +68,7 @@
             </form>
           </tab>
           <tab heading="Edit Photos" id="tab2">
-            <p>Photos</p>
+            <app-photo-editor [photos]="user.photos" (getMemberPhotoChange)="updateMainPhoto($event)"></app-photo-editor>
           </tab>
         </tabset>
       </div>

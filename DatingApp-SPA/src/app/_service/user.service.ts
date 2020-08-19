@@ -29,4 +29,19 @@ export class UserService {
   updateUser(id: number, user: User): Observable<any> {
     return this.http.put(`${this.url}users/${id}`, user, httpOptions);
   }
+
+  setMainPhoto(userId: number, id: number): Observable<any> {
+    return this.http.post(
+      `${this.url}users/${userId}/photos/${id}/setMain`,
+      {},
+      httpOptions
+    );
+  }
+
+  deletePhoto(userId: number, id: number): Observable<any> {
+    return this.http.delete(
+      `${this.url}users/${userId}/photos/${id}`,
+      httpOptions
+    );
+  }
 }

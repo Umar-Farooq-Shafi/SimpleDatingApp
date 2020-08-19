@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Data
 {
-    public class AuthRepo:IAuthRepo
+    public class AuthRepo : IAuthRepo
     {
         private readonly DataContext _context;
 
@@ -21,7 +21,7 @@ namespace DatingApp.API.Data
         public async Task<User> Register(User user, string password)
         {
             // METHOD: Creating hash salt password 
-            CreatePasswordHash(password,out byte[] passwordHash,out byte[] passwordSalt);
+            CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
 
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
@@ -49,11 +49,12 @@ namespace DatingApp.API.Data
         {
             // Finding the user from DB
             // IF: Failed returning null
-            var user = await _context.Users.FirstOrDefaultAsync(x => x.Username == username);
+            var user = await _context.Users.Include(p => p.Photos)
+                .FirstOrDefaultAsync(x => x.Username == username);
             if (user == null)
                 return null;
 
-            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt)) 
+            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
                 return null;
 
             return user;

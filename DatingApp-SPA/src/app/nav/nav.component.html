@@ -4,11 +4,15 @@
         <a class="p-2 text-dark" [routerLink]="['/user/members']" routerLinkActive="active">Matches</a>
         <a class="p-2 text-dark" [routerLink]="['/user/lists']" routerLinkActive="active">Lists</a>
         <a class="p-2 text-dark" [routerLink]="['/user/messages']" routerLinkActive="active">Messages</a>
+        <a class="p-2 text-dark" [routerLink]="['/user/member/edit']">
+          <img [src]="photoUrl" alt="" />
+        </a>
       </nav>
 
       <div *ngIf="loggedIn()" class="dropdown" dropdown>
         <span class="dropdown-item-text mx-2 dropdown-toggle" dropdownToggle>
-          Welcome {{ authService.decodedToken?.unique_name | titlecase}}</span>
+          Welcome {{ authService.decodedToken?.unique_name | titlecase}}
+        </span>
         <div class="dropdown-menu mt-3" *dropdownMenu>
           <a class="dropdown-item" [routerLink]="['/user/member/edit']">
             <i class="fa fa-user"></i>

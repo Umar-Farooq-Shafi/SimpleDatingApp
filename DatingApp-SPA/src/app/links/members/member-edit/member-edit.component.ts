@@ -1,5 +1,3 @@
-import { UserService } from './../../../_service/user.service';
-import { AlertifyService } from './../../../_service/alertify.service';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import {
@@ -12,7 +10,10 @@ import {
 import { User } from 'src/app/_models/user';
 import { tap } from 'rxjs/operators';
 import { NgForm } from '@angular/forms';
+
 import { AuthService } from 'src/app/_service/auth.service';
+import { UserService } from './../../../_service/user.service';
+import { AlertifyService } from './../../../_service/alertify.service';
 
 @Component({
   selector: 'app-member-edit',
@@ -23,7 +24,10 @@ export class MemberEditComponent implements OnInit, OnDestroy {
   user: User;
   private sub$: Subscription;
   private isSub = false;
+  private photoSub$: Subscription;
+  private isPhotoSub = false;
   @ViewChild('editForm') editForm: NgForm;
+  photoUrl: string;
 
   constructor(
     private route: ActivatedRoute,
@@ -35,6 +39,9 @@ export class MemberEditComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.isSub) {
       this.sub$.unsubscribe();
+    }
+    if (this.isPhotoSub) {
+      this.photoSub$.unsubscribe();
     }
   }
 
@@ -48,6 +55,13 @@ export class MemberEditComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.user = data.user;
       });
+    this.photoSub$ = this.authService.currentPhotoUrl
+      .pipe(
+        tap(() => {
+          this.isPhotoSub = true;
+        })
+      )
+      .subscribe((url) => (this.photoUrl = url));
   }
 
   @HostListener('window:beforeunload', ['$event'])
@@ -72,5 +86,9 @@ export class MemberEditComponent implements OnInit, OnDestroy {
         },
         (err) => this.alertify.error(err)
       );
+  }
+
+  updateMainPhoto(url: string): void {
+    this.user.photoUrl = url;
   }
 }

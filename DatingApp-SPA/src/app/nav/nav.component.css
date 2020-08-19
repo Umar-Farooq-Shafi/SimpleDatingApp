@@ -3,3 +3,10 @@
 h5:hover {
     cursor: pointer;
 }
+
+img {
+    max-height: 70px;
+    border: 1px solid white;
+    display: inline;
+    cursor: pointer;
+}
