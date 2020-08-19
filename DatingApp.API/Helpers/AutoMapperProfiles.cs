@@ -12,8 +12,6 @@ namespace DatingApp.API.Helpers
     {
         public AutoMapperProfiles()
         {
-            
-            
             CreateMap<User, UserForListDto>()
                 // Mapping to get Main(profile) Photo
                 .ForMember(des => des.PhotoUrl, opt =>
@@ -37,7 +35,10 @@ namespace DatingApp.API.Helpers
                 {
                     opt.ResolveUsing(d => d.DateOfBirth.CalculateAge());
                 });
+            
             CreateMap<Photo, PhotosForDetailedDto>();
+
+            CreateMap<UserForUpdateDto, User>();
         }
     }
 }

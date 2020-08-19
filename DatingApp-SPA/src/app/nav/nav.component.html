@@ -10,7 +10,7 @@
         <span class="dropdown-item-text mx-2 dropdown-toggle" dropdownToggle>
           Welcome {{ authService.decodedToken?.unique_name | titlecase}}</span>
         <div class="dropdown-menu mt-3" *dropdownMenu>
-          <a class="dropdown-item" href="#">
+          <a class="dropdown-item" [routerLink]="['/user/member/edit']">
             <i class="fa fa-user"></i>
             Edit Profile
           </a>

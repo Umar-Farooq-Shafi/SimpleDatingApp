@@ -31,6 +31,7 @@ export class NavComponent implements OnInit {
       (err) => this.alertify.error(err),
       () => {
         this.router.navigateByUrl('user/members');
+        this.loginForm.reset();
       }
     );
   }
@@ -42,6 +43,6 @@ export class NavComponent implements OnInit {
   logout(): void {
     localStorage.removeItem('token');
     this.alertify.message('Logged out...');
-    this.router.navigateByUrl('/home');
+    this.router.navigateByUrl('/');
   }
 }

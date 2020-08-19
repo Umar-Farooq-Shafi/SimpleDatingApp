@@ -14,6 +14,11 @@ import { RegisterComponent } from './register/register.component';
 import { ErrorInterceptorProvider } from './_service/error.interceptor';
 import { AlertifyService } from './_service/alertify.service';
 import { appRoutes } from './route';
+import { JwtModule } from '@auth0/angular-jwt';
+
+export function tokenGetter(): string {
+  return localStorage.getItem('token');
+}
 
 @NgModule({
   declarations: [AppComponent, NavComponent, HomeComponent, RegisterComponent],
@@ -25,6 +30,12 @@ import { appRoutes } from './route';
     BrowserAnimationsModule,
     BsDropdownModule.forRoot(),
     RouterModule.forRoot(appRoutes),
+    JwtModule.forRoot({
+      config: {
+        tokenGetter,
+        allowedDomains: ['localhost:5000'],
+      },
+    }),
   ],
   providers: [ErrorInterceptorProvider, AlertifyService],
   bootstrap: [AppComponent],

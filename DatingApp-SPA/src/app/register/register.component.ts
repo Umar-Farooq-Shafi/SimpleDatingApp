@@ -54,11 +54,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.subs$ = this.service.register(this.registerForm.value).subscribe(
       () => {
         this.alertify.success('Register successful...');
-        this.isSub = true;
         this.registerForm.reset();
       },
       (err) => console.log('error in registration...')
     );
+    this.isSub = true;
   }
 
   cancel(): void {
