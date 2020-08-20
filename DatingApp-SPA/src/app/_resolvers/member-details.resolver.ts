@@ -1,8 +1,9 @@
 import { catchError } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+
 import { AlertifyService } from './../_service/alertify.service';
 import { UserService } from './../_service/user.service';
 import { User } from './../_models/user';
-import { Injectable } from '@angular/core';
 import {
   Resolve,
   ActivatedRouteSnapshot,

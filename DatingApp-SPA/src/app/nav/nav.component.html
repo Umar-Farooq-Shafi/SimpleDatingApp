@@ -5,7 +5,7 @@
         <a class="p-2 text-dark" [routerLink]="['/user/lists']" routerLinkActive="active">Lists</a>
         <a class="p-2 text-dark" [routerLink]="['/user/messages']" routerLinkActive="active">Messages</a>
         <a class="p-2 text-dark" [routerLink]="['/user/member/edit']">
-          <img [src]="photoUrl" alt="" />
+          <img [src]="photoUrl || '../../assets/user.png'" alt="" />
         </a>
       </nav>
 

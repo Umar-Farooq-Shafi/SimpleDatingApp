@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 
 // Bootstrap
 import { TabsModule } from 'ngx-bootstrap/tabs';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
 
 // Gallery Viewers
 import { NgxGalleryModule } from 'ngx-gallery-9';
@@ -30,6 +32,7 @@ import { MemberEditResolver } from '../_resolvers/member-edit.resolver';
 // Guards
 import { PreventUnsavedChangesGuard } from './../_guards/prevent-unsaved-changes.guard';
 import { AuthGuard } from './../_guards/auth.guard';
+import { MemberListResolver } from '../_resolvers/member-list.resolver';
 
 @NgModule({
   declarations: [
@@ -45,6 +48,8 @@ import { AuthGuard } from './../_guards/auth.guard';
     CommonModule,
     LinksRoutingModule,
     TabsModule.forRoot(),
+    PaginationModule.forRoot(),
+    ButtonsModule.forRoot(),
     NgxGalleryModule,
     FormsModule,
     FileUploadModule,
@@ -54,6 +59,7 @@ import { AuthGuard } from './../_guards/auth.guard';
     MemberDetailResolver,
     MemberEditResolver,
     PreventUnsavedChangesGuard,
+    MemberListResolver,
   ],
 })
 export class LinksModule {}

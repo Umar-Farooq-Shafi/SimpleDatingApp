@@ -38,8 +38,8 @@ export class AuthService {
     );
   }
 
-  register(modal: any): Observable<any> {
-    return this.http.post(`${this.url}/register`, modal);
+  register(user: User): Observable<any> {
+    return this.http.post(`${this.url}/register`, user);
   }
 
   loggedIn(): boolean {

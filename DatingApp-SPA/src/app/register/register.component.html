@@ -3,34 +3,148 @@
   <hr>
 
   <div class="form-group">
-    <input type="text" (keyup)="clicked()" formControlName="username" class="form-control" placeholder="Username">
+    <label class="control-label" style="margin-right:10px">I am a: </label>
+    <label class="radio-inline">
+      <input class="mr-3" type="radio" value="male" formControlName="gender">Male
+    </label>
+    <label class="radio-inline ml-3">
+      <input class="mr-3" type="radio" value="female" formControlName="gender">Female
+    </label>
   </div>
 
-  <div *ngIf="registerForm.controls.username.touched && registerForm.controls.username.status === 'INVALID'">
-    <div *ngIf="registerForm.controls.username.errors?.required" class="alert alert-danger" role="alert">
-      Username is required
+  <div class="form-group">
+    <input
+      type="text"
+      formControlName="username"
+      class="form-control"
+      [ngClass]="{'is-valid': !registerForm.get('username').errors &&
+        registerForm.get('username').touched}"
+      placeholder="Username..."
+    >
+    <div *ngIf="registerForm.get('username').touched &&
+      registerForm.get('username').status === 'INVALID'">
+      <div *ngIf="registerForm.get('username').errors?.required"
+        class="alert-danger alert" role="alert">
+        Username is required
+      </div>
+      <div *ngIf="registerForm.get('username').errors?.minlength?.actualLength < 4
+        || registerForm.get('username').errors?.maxlength?.actualLength < 8
+      " class="alert-danger alert" role="alert">
+        Username shold be between 4 to 8 Characters
+      </div>
     </div>
-    <div *ngIf="registerForm.controls.username.errors?.minlength?.actualLength < 4
-      || registerForm.controls.username.errors?.maxlength?.actualLength < 8
-    " class="alert alert-danger" role="alert">
-      Username shold be between 4 to 8 Characters
+  </div>
+
+
+  <div class="form-group">
+    <input
+      [ngClass]="{'is-valid': !registerForm.get('knownAs').errors
+        && registerForm.get('knownAs').touched}" class="form-control"
+      placeholder="Known as..."
+      formControlName="knownAs">
+    <div class="alert-danger alert" role="alert"
+      *ngIf="registerForm.get('knownAs').touched
+        && registerForm.get('knownAs').hasError('required')">
+      Known as is required
     </div>
   </div>
 
   <div class="form-group">
-    <input type="password" formControlName="password" class="form-control" placeholder="Password">
+    <input
+      [ngClass]="{'is-valid': !registerForm.get('dateOfBirth').errors
+        && registerForm.get('dateOfBirth').touched}"
+      class="form-control"
+        placeholder="Date of Birth..."
+        formControlName="dateOfBirth"
+        type="text"
+        bsDatepicker
+        [bsConfig]="bsConfig"
+      >
+    <div class="alert-danger alert" role="alert"
+      *ngIf="registerForm.get('dateOfBirth').touched
+        && registerForm.get('dateOfBirth').hasError('required')">
+      Date of Birth is required
+    </div>
   </div>
 
-  <div *ngIf="registerForm.controls.password.touched && registerForm.controls.password.status === 'INVALID'">
-    <div *ngIf="registerForm.controls.password.errors?.required" class="alert alert-danger" role="alert">
-      Password is required
-    </div>
-    <div *ngIf="registerForm.controls.password.errors?.minlength?.actualLength < 4
-      || registerForm.controls.password.errors?.maxlength?.actualLength < 8
-    " class="alert alert-danger" role="alert">
-      Password shold be between 4 to 8 Characters
+
+  <div class="form-group">
+    <input
+      [ngClass]="{'is-valid': !registerForm.get('city').errors
+        && registerForm.get('city').touched}"
+      class="form-control"
+      placeholder="City..."
+      formControlName="city">
+    <div class="alert-danger alert" role="alert"
+      *ngIf="registerForm.get('city').touched
+        && registerForm.get('city').hasError('required')">
+      City is required
     </div>
   </div>
+
+  <div class="form-group">
+    <input
+      [ngClass]="{'is-valid': !registerForm.get('country').errors
+        && registerForm.get('country').touched}"
+      class="form-control"
+      placeholder="Country..."
+      formControlName="country"
+    >
+    <div class="alert-danger alert" role="alert"
+      *ngIf="registerForm.get('country').touched
+        && registerForm.get('country').hasError('required')">
+      Country is required
+    </div>
+  </div>
+
+  <div class="form-group">
+    <input
+      type="password"
+      formControlName="password"
+      class="form-control"
+      [ngClass]="{'is-valid': !registerForm.get('password').errors &&
+        registerForm.get('password').touched}"
+      placeholder="Password...">
+    <div *ngIf="registerForm.get('password').touched &&
+      registerForm.get('password').status === 'INVALID'">
+      <div *ngIf="registerForm.get('password').errors?.required"
+        class="alert alert-danger" role="alert">
+        Password is required
+      </div>
+      <div *ngIf="registerForm.get('password').errors?.minlength?.actualLength < 4
+        || registerForm.get('password').errors?.maxlength?.actualLength < 8
+      " class="alert alert-danger" role="alert">
+        Password shold be between 4 to 8 Characters
+      </div>
+    </div>
+  </div>
+
+
+  <div class="form-group">
+    <input
+      type="password"
+      formControlName="confirmPassword"
+      class="form-control"
+      [ngClass]="{'is-valid':
+        !registerForm.get('confirmPassword').errors
+        && registerForm.get('confirmPassword').touched
+        || registerForm.get('confirmPassword').touched
+        && !registerForm.hasError('mismatch')}"
+      placeholder="Confirm Password...">
+    <div *ngIf="registerForm.hasError('mismatch')
+      && registerForm.get('confirmPassword').touched"
+      class="alert-danger alert" role="alert" role="alert">
+      Password must Match
+    </div>
+    <div *ngIf="registerForm.get('confirmPassword').touched &&
+      registerForm.get('confirmPassword').status === 'INVALID'">
+      <div *ngIf="registerForm.get('confirmPassword').hasError('required')"
+        class="alert-danger alert" role="alert" role="alert">
+        Confirm Password is required
+      </div>
+    </div>
+  </div>
+
 
   <div class="form-group text-center">
     <button class="btn btn-success" type="submit" [disabled]="!registerForm.valid" >Register</button>

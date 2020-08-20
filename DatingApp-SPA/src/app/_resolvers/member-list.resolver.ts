@@ -14,7 +14,10 @@ import { User } from './../_models/user';
 import { AuthService } from './../_service/auth.service';
 
 @Injectable()
-export class MemberEditResolver implements Resolve<User> {
+export class MemberListResolver implements Resolve<User> {
+  pageNumber = 1;
+  pageSize = 5;
+
   constructor(
     private userService: UserService,
     private router: Router,
@@ -26,10 +29,10 @@ export class MemberEditResolver implements Resolve<User> {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): User | import('rxjs').Observable<User> | Promise<User> {
-    return this.userService.getUser(this.authService.decodedToken.nameid).pipe(
+    return this.userService.getUsers(this.pageNumber, this.pageSize).pipe(
       catchError((err) => {
         this.alertify.error('Error in getting data...');
-        this.router.navigate(['/user/members']);
+        this.router.navigate(['/']);
         return of(null);
       })
     );

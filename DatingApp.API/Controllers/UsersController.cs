@@ -6,78 +6,81 @@ using System.Threading.Tasks;
 using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Dtos;
+using DatingApp.API.Helpers;
 using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace DatingApp.API.Controllers
-{
+namespace DatingApp.API.Controllers {
+    [ServiceFilter (typeof (LogUserActivity))]
     [Authorize]
-    [Route("api/[controller]")]
+    [Route ("api/[controller]")]
     [ApiController]
-    public class UsersController : ControllerBase
-    {
+    public class UsersController : ControllerBase {
         private readonly IDatingRepo _repo;
         private readonly IMapper _mapper;
 
-        public UsersController(IDatingRepo repo, IMapper mapper)
-        {
+        public UsersController (IDatingRepo repo, IMapper mapper) {
             _repo = repo;
             _mapper = mapper;
         }
 
         // GET: api/<UsersController>
         [HttpGet]
-        public async Task<IActionResult> GetUsers()
-        {
-            IEnumerable<User> users = await _repo.GetUsers();
+        public async Task<IActionResult> GetUsers ([FromQuery] UserParams userParams) {
+            var currentUserId = int.Parse (User.FindFirst (ClaimTypes.NameIdentifier).Value);
 
-            var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+            var userFromRepo = await _repo.GetUser (currentUserId);
 
-            return Ok(usersToReturn);
+            userParams.UserId = currentUserId;
+
+            if (string.IsNullOrEmpty (userParams.Gender))
+                userParams.Gender = userFromRepo.Gender == "male" ? "female" : "male";
+
+            var users = await _repo.GetUsers (userParams);
+
+            var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>> (users);
+
+            Response.AddPagination (users.CurrentPage, users.PageSize, users.TotalCount, users.TotalPages);
+
+            return Ok (usersToReturn);
         }
 
         // GET api/<UsersController>/5
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser(int id)
-        {
-            var user = await _repo.GetUser(id);
+        [HttpGet ("{id:int}", Name = "GetUser")]
+        public async Task<IActionResult> GetUser (int id) {
+            var user = await _repo.GetUser (id);
 
-            var userToReturn = _mapper.Map<UserForDetailedDto>(user);
+            var userToReturn = _mapper.Map<UserForDetailedDto> (user);
 
-            return Ok(userToReturn);
+            return Ok (userToReturn);
         }
 
         // POST api/<UsersController>
         [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+        public void Post ([FromBody] string value) { }
 
         // PUT api/<UsersController>/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(int id, [FromBody] UserForUpdateDto updateDto)
-        {
+        [HttpPut ("{id}")]
+        public async Task<IActionResult> UpdateUser (int id, [FromBody] UserForUpdateDto updateDto) {
             // Checking if user is logged in who try to update profile
-            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-                return Unauthorized();
+            if (id != int.Parse (User.FindFirst (ClaimTypes.NameIdentifier).Value))
+                return Unauthorized ();
 
-            var userFromRepo = await _repo.GetUser(id);
+            var userFromRepo = await _repo.GetUser (id);
 
-            _mapper.Map(updateDto, userFromRepo);
+            _mapper.Map (updateDto, userFromRepo);
 
-            if (await _repo.SaveAll())
-                return NoContent();
+            if (await _repo.SaveAll ())
+                return NoContent ();
 
-            throw new Exception($"Updating user {id} failed on save");
+            throw new Exception ($"Updating user {id} failed on save");
         }
 
         // DELETE api/<UsersController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        [HttpDelete ("{id}")]
+        public void Delete (int id) { }
     }
 }

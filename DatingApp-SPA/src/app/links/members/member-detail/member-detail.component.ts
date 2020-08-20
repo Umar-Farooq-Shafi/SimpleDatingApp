@@ -1,7 +1,4 @@
 import { Subscription } from 'rxjs';
-import { AlertifyService } from './../../../_service/alertify.service';
-import { UserService } from './../../../_service/user.service';
-import { User } from './../../../_models/user';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { tap } from 'rxjs/operators';
@@ -10,6 +7,10 @@ import {
   NgxGalleryImage,
   NgxGalleryAnimation,
 } from 'ngx-gallery-9';
+
+import { AlertifyService } from './../../../_service/alertify.service';
+import { UserService } from './../../../_service/user.service';
+import { User } from './../../../_models/user';
 
 @Component({
   selector: 'app-member-detail',
@@ -23,11 +24,7 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
 
-  constructor(
-    private userService: UserService,
-    private alertify: AlertifyService,
-    private route: ActivatedRoute
-  ) {}
+  constructor(private route: ActivatedRoute) {}
 
   ngOnDestroy(): void {
     if (this.isSubs) {
@@ -62,11 +59,11 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
 
   getImages(): Array<any> {
     const images = [];
-    for (let i = 0; i < this.user.photos.length; i++) {
+    for (const photo of this.user.photos) {
       images.push({
-        small: this.user.photos[i].url,
-        medium: this.user.photos[i].url,
-        big: this.user.photos[i].url,
+        small: photo.url,
+        medium: photo.url,
+        big: photo.url,
       });
     }
 
