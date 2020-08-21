@@ -1,11 +1,6 @@
 import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
-import {
-  Resolve,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  Router,
-} from '@angular/router';
+import { Resolve, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { AlertifyService } from './../_service/alertify.service';
@@ -22,12 +17,9 @@ export class MemberEditResolver implements Resolve<User> {
     private authService: AuthService
   ) {}
 
-  resolve(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): User | import('rxjs').Observable<User> | Promise<User> {
+  resolve(): User | import('rxjs').Observable<User> | Promise<User> {
     return this.userService.getUser(this.authService.decodedToken.nameid).pipe(
-      catchError((err) => {
+      catchError(() => {
         this.alertify.error('Error in getting data...');
         this.router.navigate(['/user/members']);
         return of(null);

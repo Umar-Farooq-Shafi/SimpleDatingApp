@@ -1,16 +1,11 @@
 import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
+import { Resolve, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { of } from 'rxjs';
 
 import { AlertifyService } from './../_service/alertify.service';
 import { UserService } from './../_service/user.service';
 import { User } from './../_models/user';
-import {
-  Resolve,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  Router,
-} from '@angular/router';
-import { of } from 'rxjs';
 
 @Injectable()
 export class MemberDetailResolver implements Resolve<User> {
@@ -21,8 +16,7 @@ export class MemberDetailResolver implements Resolve<User> {
   ) {}
 
   resolve(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
+    route: ActivatedRouteSnapshot
   ): User | import('rxjs').Observable<User> | Promise<User> {
     return this.userService.getUser(route.params.id).pipe(
       catchError((err) => {

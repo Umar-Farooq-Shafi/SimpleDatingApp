@@ -15,6 +15,7 @@ import { FileUploadModule } from 'ng2-file-upload';
 
 // Components
 import { MessagesComponent } from './messages/messages.component';
+import { MemberMessageComponent } from './members/member-message/member-message.component';
 import { ListsComponent } from './lists/lists.component';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
@@ -28,6 +29,8 @@ import { LinksRoutingModule } from './links-routing.module';
 // Resolvers
 import { MemberDetailResolver } from '../_resolvers/member-details.resolver';
 import { MemberEditResolver } from '../_resolvers/member-edit.resolver';
+import { ListsResolver } from '../_resolvers/lists.resolver';
+import { MessagesResolver } from '../_resolvers/messages.resolver';
 
 // Guards
 import { PreventUnsavedChangesGuard } from './../_guards/prevent-unsaved-changes.guard';
@@ -43,6 +46,7 @@ import { MemberListResolver } from '../_resolvers/member-list.resolver';
     MemberDetailComponent,
     MemberEditComponent,
     PhotoEditorComponent,
+    MemberMessageComponent,
   ],
   imports: [
     CommonModule,
@@ -60,6 +64,8 @@ import { MemberListResolver } from '../_resolvers/member-list.resolver';
     MemberEditResolver,
     PreventUnsavedChangesGuard,
     MemberListResolver,
+    ListsResolver,
+    MessagesResolver,
   ],
 })
 export class LinksModule {}

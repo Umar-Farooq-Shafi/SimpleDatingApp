@@ -1,6 +1,6 @@
 <!-- header -->
 <div class="text-center mt-3">
-  <h2>Your matches - {{pagination.totalItems}} found</h2>
+  <h3>Your matches - {{pagination.totalItems}} found</h3>
 </div>
 
 <div class="container mt-3">
@@ -33,6 +33,7 @@
           </option>
         </select>
       </div>
+
       <button type="submit" class="btn btn-primary" style="margin-left:10px">Apply Filters</button>
       <button type="button" (click)="resetFilters()"
         class="btn btn-info" style="margin-left:10px">Reset Filter</button>
@@ -51,7 +52,7 @@
               [(ngModel)]="userParams.orderBy"
               name="orderBy" class="btn btn-primary" btnRadio="createdAt">Newest Members</button>
         </div>
-    </div>
+      </div>
     </form>
   <br>
 

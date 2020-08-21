@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DatingApp.API.Models
-{
+namespace DatingApp.API.Models {
     // FIELDS: User fields
-    public class User
-    {
+    public class User {
         public int Id { get; set; }
         public string Username { get; set; }
         public byte[] PasswordHash { get; set; }
@@ -23,5 +21,9 @@ namespace DatingApp.API.Models
         public string City { get; set; }
         public string Country { get; set; }
         public ICollection<Photo> Photos { get; set; }
+        public ICollection<Like> Likers { get; set; }
+        public ICollection<Like> Likees { get; set; }
+        public ICollection<Message> MessagesSent { get; set; }
+        public ICollection<Message> MessagesReceived { get; set; }
     }
 }

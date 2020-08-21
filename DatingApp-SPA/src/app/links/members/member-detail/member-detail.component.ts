@@ -1,5 +1,5 @@
 import { Subscription } from 'rxjs';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { tap } from 'rxjs/operators';
 import {
@@ -7,9 +7,8 @@ import {
   NgxGalleryImage,
   NgxGalleryAnimation,
 } from 'ngx-gallery-9';
+import { TabsetComponent } from 'ngx-bootstrap/tabs';
 
-import { AlertifyService } from './../../../_service/alertify.service';
-import { UserService } from './../../../_service/user.service';
 import { User } from './../../../_models/user';
 
 @Component({
@@ -21,14 +20,22 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   user: User;
   private sub$: Subscription;
   private isSubs = false;
+  private querySub$: Subscription;
+  private isQuerySubs = false;
   galleryOptions: NgxGalleryOptions[];
   galleryImages: NgxGalleryImage[];
+  @ViewChild('memberTabs', { static: true }) memberTabs: TabsetComponent;
 
   constructor(private route: ActivatedRoute) {}
 
   ngOnDestroy(): void {
     if (this.isSubs) {
       this.sub$.unsubscribe();
+      this.isSubs = false;
+    }
+    if (this.isQuerySubs) {
+      this.querySub$.unsubscribe();
+      this.isQuerySubs = false;
     }
   }
 
@@ -41,6 +48,21 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
       )
       .subscribe((data) => {
         this.user = data.user;
+      });
+
+    this.querySub$ = this.route.queryParams
+      .pipe(
+        tap(() => {
+          this.isQuerySubs = true;
+        })
+      )
+      .subscribe((params) => {
+        const selectedTab: number = params.tab;
+        if (selectedTab) {
+          this.selectTab(selectedTab);
+        } else {
+          this.selectTab(0);
+        }
       });
 
     this.galleryOptions = [
@@ -68,5 +90,9 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
     }
 
     return images;
+  }
+
+  selectTab(tabId: number): void {
+    this.memberTabs.tabs[tabId].active = true;
   }
 }

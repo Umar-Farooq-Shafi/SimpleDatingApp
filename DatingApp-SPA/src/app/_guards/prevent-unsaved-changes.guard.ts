@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  CanDeactivate,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
-  UrlTree,
-} from '@angular/router';
+import { CanDeactivate, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { MemberEditComponent } from '../links/members/member-edit/member-edit.component';
@@ -15,10 +10,7 @@ import { MemberEditComponent } from '../links/members/member-edit/member-edit.co
 export class PreventUnsavedChangesGuard
   implements CanDeactivate<MemberEditComponent> {
   canDeactivate(
-    component: MemberEditComponent,
-    currentRoute: ActivatedRouteSnapshot,
-    currentState: RouterStateSnapshot,
-    nextState?: RouterStateSnapshot
+    component: MemberEditComponent
   ):
     | Observable<boolean | UrlTree>
     | Promise<boolean | UrlTree>

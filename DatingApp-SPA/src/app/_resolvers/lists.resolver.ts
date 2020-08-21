@@ -8,9 +8,10 @@ import { UserService } from './../_service/user.service';
 import { User } from './../_models/user';
 
 @Injectable()
-export class MemberListResolver implements Resolve<User[]> {
+export class ListsResolver implements Resolve<User> {
   pageNumber = 1;
   pageSize = 5;
+  likesParam = 'Likers';
 
   constructor(
     private userService: UserService,
@@ -18,13 +19,15 @@ export class MemberListResolver implements Resolve<User[]> {
     private alertify: AlertifyService
   ) {}
 
-  resolve(): User[] | import('rxjs').Observable<User[]> | Promise<User[]> {
-    return this.userService.getUsers(this.pageNumber, this.pageSize).pipe(
-      catchError(() => {
-        this.alertify.error('Error in getting data...');
-        this.router.navigate(['/']);
-        return of(null);
-      })
-    );
+  resolve(): User | import('rxjs').Observable<User> | Promise<User> {
+    return this.userService
+      .getUsers(this.pageNumber, this.pageSize, null, this.likesParam)
+      .pipe(
+        catchError(() => {
+          this.alertify.error('Error in getting data...');
+          this.router.navigate(['/']);
+          return of(null);
+        })
+      );
   }
 }
