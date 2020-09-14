@@ -4,6 +4,7 @@
         <a class="p-2 text-dark" [routerLink]="['/user/members']" routerLinkActive="active">Matches</a>
         <a class="p-2 text-dark" [routerLink]="['/user/lists']" routerLinkActive="active">Lists</a>
         <a class="p-2 text-dark" [routerLink]="['/user/messages']" routerLinkActive="active">Messages</a>
+        <a *appHasRole="['Admin', 'Moderator']" class="p-2 text-dark" [routerLink]="['/admin']" routerLinkActive="active">Admin</a>
         <a class="p-2 text-dark" [routerLink]="['/user/member/edit']">
           <img [src]="photoUrl || '../../assets/user.png'" alt="" />
         </a>

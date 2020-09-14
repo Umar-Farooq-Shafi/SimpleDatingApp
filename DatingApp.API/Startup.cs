@@ -3,12 +3,16 @@ using System.Text;
 using AutoMapper;
 using DatingApp.API.Data;
 using DatingApp.API.Helpers;
+using DatingApp.API.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,30 +33,18 @@ namespace DatingApp.API {
             services.AddDbContext<DataContext> (x =>
                 x.UseSqlite (Configuration.GetConnectionString ("DefaultConnection")));
 
-            // CONFIG: Controllers
-            services.AddControllers ().SetCompatibilityVersion (CompatibilityVersion.Latest);
-
-            // CONFIG: MVC pattern
-            services.AddMvc ().SetCompatibilityVersion (CompatibilityVersion.Latest)
-                .AddNewtonsoftJson (opt => {
-                    opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
-                });
-
-            // CONFIG: for cors platform access
-            services.AddCors ();
-
-            // CONFIG: Setting for cloudinary
-            services.Configure<CloudinarySettings> (Configuration.GetSection ("CloudinarySettings"));
-
-            // CONFIG: for AUTO-Mapper dep injections platform access
-            services.AddAutoMapper ();
-
-            // CONFIG: Seeding the user data into DB
-            services.AddTransient<Seed> ();
-
-            // CONFIG: Register the Repo into APP
-            services.AddScoped<IAuthRepo, AuthRepo> ();
-            services.AddScoped<IDatingRepo, DatingRepo> ();
+            // CONFIG: changing identity core default config
+            IdentityBuilder builder = services.AddIdentityCore<User>(opt => {
+                opt.Password.RequireDigit = false;
+                opt.Password.RequiredLength = 4;
+                opt.Password.RequireNonAlphanumeric = false;
+                opt.Password.RequireUppercase = false;
+            });
+            builder = new IdentityBuilder(builder.UserType, typeof(Role), builder.Services);
+            builder.AddEntityFrameworkStores<DataContext>();
+            builder.AddRoleValidator<RoleValidator<Role>>();
+            builder.AddRoleManager<RoleManager<Role>>();
+            builder.AddSignInManager<SignInManager<User>>();
 
             // CONFIG: Guard for Authenticated user
             services.AddAuthentication (JwtBearerDefaults.AuthenticationScheme)
@@ -65,6 +57,44 @@ namespace DatingApp.API {
                     ValidateAudience = false
                     };
                 });
+
+            // CONFIG: Guard for Authorized user
+            services.AddAuthorization(opt => {
+                opt.AddPolicy("RequireAdminRole", p => p.RequireRole("Admin"));
+                opt.AddPolicy("ModeratePhotoRole", p => p.RequireRole("Admin", "Moderator"));
+                opt.AddPolicy("VipOnly", p => p.RequireRole("VIP"));
+            });
+
+            // CONFIG: Controllers
+            services.AddControllers ().SetCompatibilityVersion (CompatibilityVersion.Latest);
+
+            // CONFIG: MVC pattern
+            services.AddMvc (opt => {
+                var policy = new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .Build();
+
+                opt.Filters.Add(new AuthorizeFilter(policy));
+            }).SetCompatibilityVersion (CompatibilityVersion.Latest)
+                .AddNewtonsoftJson (opt => {
+                    opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                });
+
+            // CONFIG: for cors platform access
+            services.AddCors ();
+
+            // CONFIG: Setting for cloudinary
+            services.Configure<CloudinarySettings> (Configuration.GetSection ("CloudinarySettings"));
+
+            // CONFIG: for AUTO-Mapper dep injections platform access
+            Mapper.Reset();
+            services.AddAutoMapper ();
+
+            // CONFIG: Seeding the user data into DB
+            services.AddTransient<Seed> ();
+
+            // CONFIG: Register the Repo into APP
+            services.AddScoped<IDatingRepo, DatingRepo> ();            
             services.AddScoped<LogUserActivity> ();
         }
 
@@ -86,7 +116,7 @@ namespace DatingApp.API {
 
             app.UseHttpsRedirection ();
 
-            // seed.SeedUser(); // TODO: Uncomment if you want to seed user data into DB
+            seed.SeedUser(); // TODO: Uncomment if you want to seed user data into DB
 
             app.UseCors (x => x.AllowAnyOrigin ().AllowAnyMethod ().AllowAnyHeader ());
 

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using DatingApp.API.Helpers;
 using DatingApp.API.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace DatingApp.API.Data
 {
@@ -91,10 +90,21 @@ namespace DatingApp.API.Data
         }
 
         // GETTING: A single user from DB
-        public async Task<User> GetUser(int id) => await _context.Users.Include(p => p.Photos)
-            .FirstOrDefaultAsync(u => u.Id == id);
+        public async Task<User> GetUser(int id, bool isCurrentUser)
+        {
+            var query = _context.Users.Include(p => p.Photos)
+            .AsQueryable();
 
-        public async Task<Photo> GetPhoto(int id) => await _context.Photos.FirstOrDefaultAsync(p => p.Id == id);
+            if(isCurrentUser)
+                query = query.IgnoreQueryFilters();
+            
+           return  await query
+            .FirstOrDefaultAsync(u => u.Id == id);
+        }
+
+        public async Task<Photo> GetPhoto(int id) => 
+            await _context.Photos.IgnoreQueryFilters()
+                .FirstOrDefaultAsync(p => p.Id == id);
 
         public async Task<Photo> GetMainPhotoForUser(int userId) =>
             await _context.Photos.Where(u => u.UserId == userId)

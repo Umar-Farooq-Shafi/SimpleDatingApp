@@ -1,12 +1,12 @@
 import { Observable } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { map } from 'rxjs/operators';
 
 import { environment } from './../../environments/environment';
 import { User } from '../_models/user';
 import { Message } from '../_models/message';
 import { PaginatedResult } from '../_models/pagination';
-import { map } from 'rxjs/operators';
 
 const httpOptions = {
   headers: new HttpHeaders({

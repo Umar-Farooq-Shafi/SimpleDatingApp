@@ -2,8 +2,6 @@ import { catchError } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import {
   Resolve,
-  ActivatedRouteSnapshot,
-  RouterStateSnapshot,
   Router,
 } from '@angular/router';
 import { of } from 'rxjs';

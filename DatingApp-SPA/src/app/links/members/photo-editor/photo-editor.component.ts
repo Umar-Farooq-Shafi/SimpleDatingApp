@@ -72,6 +72,7 @@ export class PhotoEditorComponent implements OnInit, OnDestroy {
           dateAdded: r.dateAdded,
           description: r.description,
           isMain: r.isMain,
+          isApproved: r.isApproved
         };
 
         this.photos.push(photo);

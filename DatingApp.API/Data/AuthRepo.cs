@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DatingApp.API.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,8 +20,8 @@ namespace DatingApp.API.Data
             // METHOD: Creating hash salt password 
             CreatePasswordHash(password, out byte[] passwordHash, out byte[] passwordSalt);
 
-            user.PasswordHash = passwordHash;
-            user.PasswordSalt = passwordSalt;
+            // user.PasswordHash = passwordHash;
+            // user.PasswordSalt = passwordSalt;
 
             // Storing into DB Async
             await _context.Users.AddAsync(user);
@@ -50,12 +47,12 @@ namespace DatingApp.API.Data
             // Finding the user from DB
             // IF: Failed returning null
             var user = await _context.Users.Include(p => p.Photos)
-                .FirstOrDefaultAsync(x => x.Username == username);
+                .FirstOrDefaultAsync(x => x.UserName == username);
             if (user == null)
                 return null;
 
-            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
-                return null;
+            // if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+            //     return null;
 
             return user;
         }
@@ -77,6 +74,6 @@ namespace DatingApp.API.Data
 
         // METHOD: Finding a user exists or not
         public async Task<bool> UserExists(string username)
-            => await _context.Users.AnyAsync(x => x.Username == username);
+            => await _context.Users.AnyAsync(x => x.UserName == username);
     }
 }
